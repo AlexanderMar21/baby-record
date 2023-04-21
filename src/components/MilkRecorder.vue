@@ -41,7 +41,10 @@
 		</form>
 		<hr class="w-full my-2" />
 		<section class="w-full">
-			<h2 class="text-2xl text-center mb-4">Milk Records</h2>
+			<h2 class="text-2xl text-center mb-3">Milk Records</h2>
+			<small>
+				{{ timeAgo ? `Last feeding: ${timeAgo}` : '' }}
+			</small>
 			<ol
 				class="block bg-white shadow-md rounded-2xl p-4 max-h100 overflow-y-auto border-gray-300 max-h-340px"
 			>
@@ -65,11 +68,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNow, useDateFormat } from '@vueuse/core';
 import { useMilkStore } from '../store/milk';
 import { create_UUID } from '../utils/uuid';
+
+import { useTimeAgo } from '@vueuse/core';
 
 const formattedNowDate = useDateFormat(useNow(), 'YYYY-MM-DD');
 const formattedNowTime = useDateFormat(useNow(), 'HH:mm');
@@ -80,6 +85,11 @@ const sorted = computed(() =>
 		return new Date(b.time) - new Date(a.time);
 	})
 );
+
+let timeAgo = useTimeAgo(sorted.value[0]?.time);
+watch(milkRecords, () => {
+	timeAgo = useTimeAgo(sorted.value[0]?.time);
+});
 
 const setNow = () => {
 	date.value = formattedNowDate.value;
