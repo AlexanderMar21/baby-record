@@ -1,6 +1,6 @@
 <template>
 	<div class="flex justify-center flex-col items-center max-w-440px mx-auto max-h-full">
-		<h1 class="text-3xl mb-4 text-center">Feeding recorder</h1>
+		<h1 class="text-3xl mb-4 text-center px-6">Feeding tracker for 👶👶🏿👶🏼</h1>
 
 		<form @submit.prevent="addMilk" class="w-full h-full">
 			<div class="flex gap-4 justify-start">
@@ -9,7 +9,7 @@
 					<input class="form-control" id="date" type="date" v-model="date" />
 				</div>
 				<div class="form-group">
-					<label class="form" for="time"> Time: </label>
+					<label class="form" for="time">Time:</label>
 					<input class="form-control" id="time" type="time" v-model="time" />
 				</div>
 			</div>
@@ -18,48 +18,48 @@
 				<div class="form-group flex-1">
 					<label for="amount">Amount:</label>
 					<select class="form-control" id="amount" v-model="amount">
-						<option value="10">10</option>
-						<option value="20">20</option>
-						<option value="30">30</option>
-						<option value="40">40</option>
-						<option value="50">50</option>
-						<option value="60">60</option>
-						<option value="70">70</option>
-						<option value="80">80</option>
-						<option value="90">90</option>
-						<option value="100">100</option>
-						<option value="110">110</option>
-						<option value="120">120</option>
-						<option value="130">130</option>
-						<option value="140">140</option>
-						<option value="150">150</option>
+						<option value="10">10 ml</option>
+						<option value="20">20 ml</option>
+						<option value="30">30 ml</option>
+						<option value="40">40 ml</option>
+						<option value="50">50 ml</option>
+						<option value="60">60 ml</option>
+						<option value="70">70 ml</option>
+						<option value="80">80 ml</option>
+						<option value="90">90 ml</option>
+						<option value="100">100 ml</option>
+						<option value="110">110 ml</option>
+						<option value="120">120 ml</option>
+						<option value="130">130 ml</option>
+						<option value="140">140 ml</option>
+						<option value="150">150 ml</option>
+						<option value="160">160 ml</option>
+						<option value="170">170 ml</option>
+						<option value="180">180 ml</option>
+						<option value="190">190 ml</option>
 					</select>
 				</div>
 				<button class="btn btn--outlined inline-block mt-3" @click.stop="setNow" type="button">Now</button>
-				<button class="btn btn--primary flex-1 inline-block mt-3" type="submit">Save</button>
+				<button class="btn btn--primary flex-1 inline-block mt-3" type="submit">Save &nbsp 💾</button>
 			</div>
 		</form>
 		<hr class="w-full my-2" />
 		<section class="w-full">
-			<h2 class="text-2xl text-center mb-3">Milk Records</h2>
+			<h2 class="text-2xl text-center mb-3">🍼 History</h2>
 			<small>
-				{{ timeAgo ? `Last feeding: ${timeAgo}` : '' }}
+				{{ timeAgo ? `Last feeding: ${timeAgo} ⏱️` : '' }}
 			</small>
 			<ol
-				class="block bg-white shadow-md rounded-2xl p-4 max-h100 overflow-y-auto border-gray-300 max-h-340px"
+				class="block bg-white shadow-md rounded-2xl border py-4 px-2 max-h100 overflow-y-auto border-gray-300 max-h-380px"
 			>
 				<li
 					v-for="record in sorted"
 					:key="record.id"
-					class="flex items-center justify-between py-1 border-b border-gray-200"
+					class="flex items-center milk-record justify-between py-1 px-2"
 				>
-					<span>
-						{{ useDateFormat(record.date, 'DD MMM, YYYY', { locales: locale }).value }}
-					</span>
-					<span>
-						{{ useDateFormat(record.time, 'HH:mm', { locales: locale }).value }}
-					</span>
-					<span> {{ record.amount }} ml </span>
+					<span>📆 {{ useDateFormat(record.date, 'DD MMM, YYYY', { locales: locale }).value }} </span>
+					<span>🕐 {{ useDateFormat(record.time, 'HH:mm', { locales: locale }).value }} </span>
+					<span>💧 {{ record.amount }} ml </span>
 				</li>
 				<p v-if="sorted.length === 0" class="text-center">No records</p>
 			</ol>
