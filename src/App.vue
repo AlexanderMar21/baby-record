@@ -1,6 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MilkRecorder from './components/MilkRecorder.vue';
+</script>
 
-<template>Baby Boy</template>
+<template>
+	<div class="max-h-100vh py-2 px-3">
+		<MilkRecorder />
+	</div>
+</template>
 
 <style scoped>
 .logo {
