@@ -1,6 +1,9 @@
 <template>
 	<div class="flex justify-center flex-col items-center max-w-440px mx-auto max-h-full">
-		<h1 class="text-3xl mb-4 text-center px-6">Feeding tracker for 👶👶🏿👶🏼</h1>
+		<h1 class="text-3xl mb-3 text-center px-4 leading-10">
+			Feeding tracker <br />
+			<span>👶👶🏿👶🏼</span>
+		</h1>
 
 		<form @submit.prevent="addMilk" class="w-full h-full">
 			<div class="flex gap-4 justify-start">
@@ -50,7 +53,7 @@
 				{{ timeAgo ? `Last feeding: ${timeAgo} ⏱️` : '' }}
 			</small>
 			<ol
-				class="block bg-white shadow-md rounded-2xl border py-4 px-2 max-h100 overflow-y-auto border-gray-300 max-h-380px"
+				class="block bg-white shadow-md rounded-2xl border py-4 px-2 max-h100 overflow-y-auto border-gray-300 max-h-360px"
 			>
 				<li
 					v-for="record in sorted"
@@ -59,7 +62,7 @@
 				>
 					<span>📆 {{ useDateFormat(record.date, 'DD MMM, YYYY', { locales: locale }).value }} </span>
 					<span>🕐 {{ useDateFormat(record.time, 'HH:mm', { locales: locale }).value }} </span>
-					<span>💧 {{ record.amount }} ml </span>
+					<span class="min-w-71px text-right">💧 {{ record.amount }} ml </span>
 				</li>
 				<p v-if="sorted.length === 0" class="text-center">No records</p>
 			</ol>
