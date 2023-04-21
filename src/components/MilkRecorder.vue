@@ -40,13 +40,13 @@
 					</select>
 				</div>
 				<button class="btn btn--outlined inline-block mt-3" @click.stop="setNow" type="button">Now</button>
-				<button class="btn btn--primary flex-1 inline-block mt-3" type="submit">Save &nbsp 💾</button>
+				<button class="btn btn--primary flex-1 inline-block mt-3" type="submit">💾 &nbsp Save</button>
 			</div>
 		</form>
 		<hr class="w-full my-2" />
 		<section class="w-full">
 			<h2 class="text-2xl text-center mb-3">🍼 History</h2>
-			<small>
+			<small class="text-teal-900 mb-1 inline-block">
 				{{ timeAgo ? `Last feeding: ${timeAgo} ⏱️` : '' }}
 			</small>
 			<ol
