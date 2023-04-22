@@ -53,7 +53,7 @@
 				{{ timeAgo ? `Last feeding: ${timeAgo} ⏱️` : '' }}
 			</small>
 			<ol
-				class="block bg-white shadow-md rounded-2xl border max-h100 overflow-y-auto border-gray-300 max-h-360px"
+				class="block bg-white shadow-md rounded-2xl border max-h100 overflow-y-auto border-gray-300 max-h-340px"
 			>
 				<ListItem v-for="record in sorted" :key="record.id">
 					<span>📆 {{ useDateFormat(record.date, 'DD MMM, YYYY', { locales: locale }).value }} </span>
