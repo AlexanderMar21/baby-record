@@ -101,7 +101,7 @@ const setNow = () => {
 const locale = ref(navigator.language);
 const date = ref(formattedNowDate.value);
 const time = ref(formattedNowTime.value);
-const amount = ref(20);
+const amount = ref(60);
 const addMilk = () => {
 	useMilkStore().addMilkRecord({
 		date: new Date(`${date.value}`),
@@ -114,7 +114,7 @@ const addMilk = () => {
 const removeMilk = (record: MilkRecord) => {
 	const confirmed = confirm(
 		`Are you sure you want to remove the entry from ${
-			useDateFormat(record.time, 'DD MM YYYY, HH:mm', { locales: locale.value }).value
+			useDateFormat(record.time, 'DD MMMM YYYY, HH:mm', { locales: locale.value }).value
 		}?`
 	);
 	if (!confirmed) return;
