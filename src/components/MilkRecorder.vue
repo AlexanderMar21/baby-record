@@ -1,6 +1,6 @@
 <template>
-	<div class="flex justify-center flex-col items-center max-w-440px mx-auto max-h-full">
-		<h1 class="text-3xl mb-3 text-center px-4 leading-10">
+	<div class="flex justify-center flex-col items-center max-h-full">
+		<h1 class="text-2xl mb-3 text-center px-4 leading-10">
 			Feeding tracker <br />
 			<span>👶👶🏿👶🏼</span>
 		</h1>
@@ -48,7 +48,7 @@
 		</form>
 		<hr class="w-full my-2" />
 		<section class="w-full">
-			<h2 class="text-2xl text-center mb-3">🍼 History</h2>
+			<h2 class="text-xl text-center mb-3">🍼 History</h2>
 			<small class="text-teal-900 mb-1 inline-block">
 				{{ timeAgo ? `Last feeding: ${timeAgo} ⏱️` : '' }}
 			</small>
@@ -61,14 +61,14 @@
 					<span class="min-w-71px text-right">💧 {{ record.amount }} ml </span>
 					<button class="" @click="removeMilk(record)">🗑️</button>
 				</ListItem>
-				<p v-if="sorted.length === 0" class="text-center">No records</p>
+				<p v-if="sorted.length === 0" class="text-center my-2">No records</p>
 			</ol>
 		</section>
 	</div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNow, useDateFormat } from '@vueuse/core';
 import { useMilkStore } from '../store/milk';
@@ -88,6 +88,10 @@ const sorted = computed(() =>
 	})
 );
 
+onMounted(async () => {
+	await useMilkStore().fetchMilkRecords();
+});
+
 let timeAgo = useTimeAgo(sorted.value[0]?.time);
 watch(milkRecords, () => {
 	timeAgo = useTimeAgo(sorted.value[0]?.time);
@@ -102,22 +106,22 @@ const locale = ref(navigator.language);
 const date = ref(formattedNowDate.value);
 const time = ref(formattedNowTime.value);
 const amount = ref(60);
-const addMilk = () => {
-	useMilkStore().addMilkRecord({
+const addMilk = async () => {
+	await useMilkStore().addMilkRecord({
 		date: new Date(`${date.value}`),
-		amount: amount.value,
+		amount: Number(amount.value),
 		time: new Date(`${date.value}T${time.value}`).toISOString(),
 		id: create_UUID(),
 	});
 };
 
-const removeMilk = (record: MilkRecord) => {
+const removeMilk = async (record: MilkRecord) => {
 	const confirmed = confirm(
 		`Are you sure you want to remove the entry from ${
 			useDateFormat(record.time, 'DD MMMM YYYY, HH:mm', { locales: locale.value }).value
 		}?`
 	);
 	if (!confirmed) return;
-	useMilkStore().removeMilk(record.id);
+	await useMilkStore().removeMilk(record.id);
 };
 </script>

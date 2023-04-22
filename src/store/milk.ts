@@ -1,23 +1,49 @@
-import { defineStore } from 'pinia';
+import { defineStore, storeToRefs } from 'pinia';
 import { useLocalStorage } from '@vueuse/core';
 import { MilkRecord } from '../types/Milk';
-
-// You can name the return value of `defineStore()` anything you want,
-// but it's best to use the name of the store and surround it with `use`
-// and `Store` (e.g. `useUserStore`, `useCartStore`, `useProductStore`)
-// the first argument is a unique id of the store across your application
+import { doc, setDoc, deleteDoc, collection, getDocs } from 'firebase/firestore';
+import { db } from '../services/firebase';
+import { useFireStore } from './firestore';
 export const useMilkStore = defineStore('milkRecords', () => {
 	const milkRecords = useLocalStorage<MilkRecord[]>('milkRecords', []);
+	const fireStore = useFireStore();
+	const { getCollectionName, hasFireStore } = storeToRefs(fireStore);
 
-	const addMilkRecord = (record: MilkRecord) => {
+	const fetchMilkRecords = async () => {
+		if (!hasFireStore.value) return;
+		const querySnapshot = await getDocs(collection(db, getCollectionName.value));
+		if (querySnapshot) {
+			milkRecords.value = [];
+		}
+		querySnapshot.forEach((doc) => {
+			const { time, date, ...rest } = doc.data() as MilkRecord;
+			milkRecords.value = [...milkRecords.value, { ...rest, date: new Date(time), time }];
+		});
+	};
+
+	const addMilkRecord = async (record: MilkRecord) => {
 		milkRecords.value = [...milkRecords.value, record];
+		if (!hasFireStore.value) return;
+		await setDoc(doc(db, getCollectionName.value, record.id), record);
 	};
-	const removeMilk = (id: string) => {
+	const syncRecords = async () => {
+		if (!hasFireStore.value) return;
+		milkRecords.value.forEach(async (record) => {
+			await setDoc(doc(db, getCollectionName.value, record.id), record);
+		});
+	};
+
+	const removeMilk = async (id: string) => {
 		milkRecords.value = milkRecords.value.filter((record) => record.id !== id);
+		if (!hasFireStore.value) return;
+		await deleteDoc(doc(db, getCollectionName.value, id));
 	};
+
 	return {
 		milkRecords,
+		fetchMilkRecords,
 		addMilkRecord,
 		removeMilk,
+		syncRecords,
 	};
 });
