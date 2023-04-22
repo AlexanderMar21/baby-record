@@ -1,7 +1,7 @@
 <template>
 	<li
 		ref="container"
-		class="flex overflow-x-hidden items-center list-record justify-between py-1 px-2 relative"
+		class="flex overflow-x-hidden items-center list-record justify-between py-2 px-3 relative"
 	>
 		<slot />
 	</li>

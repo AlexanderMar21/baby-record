@@ -12,9 +12,12 @@ export const useMilkStore = defineStore('milkRecords', () => {
 	const addMilkRecord = (record: MilkRecord) => {
 		milkRecords.value = [...milkRecords.value, record];
 	};
-
+	const removeMilk = (id: string) => {
+		milkRecords.value = milkRecords.value.filter((record) => record.id !== id);
+	};
 	return {
 		milkRecords,
 		addMilkRecord,
+		removeMilk,
 	};
 });

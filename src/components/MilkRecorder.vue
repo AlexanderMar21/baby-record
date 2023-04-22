@@ -53,16 +53,13 @@
 				{{ timeAgo ? `Last feeding: ${timeAgo} ⏱️` : '' }}
 			</small>
 			<ol
-				class="block bg-white shadow-md rounded-2xl border py-4 px-2 max-h100 overflow-y-auto border-gray-300 max-h-360px"
+				class="block bg-white shadow-md rounded-2xl border max-h100 overflow-y-auto border-gray-300 max-h-360px"
 			>
-				<ListItem
-					v-for="record in sorted"
-					:key="record.id"
-					class="flex items-center list-record justify-between py-1 px-2"
-				>
+				<ListItem v-for="record in sorted" :key="record.id">
 					<span>📆 {{ useDateFormat(record.date, 'DD MMM, YYYY', { locales: locale }).value }} </span>
 					<span>🕐 {{ useDateFormat(record.time, 'HH:mm', { locales: locale }).value }} </span>
 					<span class="min-w-71px text-right">💧 {{ record.amount }} ml </span>
+					<button class="" @click="removeMilk(record)">🗑️</button>
 				</ListItem>
 				<p v-if="sorted.length === 0" class="text-center">No records</p>
 			</ol>
@@ -79,6 +76,7 @@ import { create_UUID } from '../utils/uuid';
 
 import { useTimeAgo } from '@vueuse/core';
 import ListItem from './ListItem.vue';
+import { MilkRecord } from '../types/Milk';
 
 const formattedNowDate = useDateFormat(useNow(), 'YYYY-MM-DD');
 const formattedNowTime = useDateFormat(useNow(), 'HH:mm');
@@ -111,5 +109,15 @@ const addMilk = () => {
 		time: new Date(`${date.value}T${time.value}`).toISOString(),
 		id: create_UUID(),
 	});
+};
+
+const removeMilk = (record: MilkRecord) => {
+	const confirmed = confirm(
+		`Are you sure you want to remove the entry from ${
+			useDateFormat(record.time, 'DD MM YYYY, HH:mm', { locales: locale.value }).value
+		}?`
+	);
+	if (!confirmed) return;
+	useMilkStore().removeMilk(record.id);
 };
 </script>
