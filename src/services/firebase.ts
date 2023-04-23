@@ -1,5 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
 	apiKey: import.meta.env.VITE_API_KEY,
@@ -14,6 +15,7 @@ export const firebaseApp = initializeApp(firebaseConfig);
 
 // used for the firestore refs
 export const db = getFirestore(firebaseApp);
+export const storage = getStorage(firebaseApp);
 
 // here we can export reusable database references
 export const feedingRecords = collection(db, 'feeding_records');

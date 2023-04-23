@@ -1,10 +1,11 @@
 import { defineStore, storeToRefs } from 'pinia';
 import { useDateFormat, useLocalStorage } from '@vueuse/core';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { db } from '../services/firebase';
+import { db, storage } from '../services/firebase';
 import { useFireStore } from './firestore';
 import { BabyInfo } from '../types/Baby';
 import { computed } from 'vue';
+import { ref } from 'firebase/storage';
 export const useBabyInfo = defineStore('babyInfo', () => {
 	const babyInfo = useLocalStorage<BabyInfo>('babyInfo', {
 		name: 'Name',
@@ -13,6 +14,7 @@ export const useBabyInfo = defineStore('babyInfo', () => {
 	});
 	const fireStore = useFireStore();
 	const { getCollectionName, hasFireStore } = storeToRefs(fireStore);
+	const pathReference = ref(storage, getCollectionName.value + '_info/babyInfo.jpg');
 
 	const setBabyInfo = async (bbInfo: BabyInfo) => {
 		babyInfo.value = bbInfo;
@@ -36,10 +38,18 @@ export const useBabyInfo = defineStore('babyInfo', () => {
 		return useDateFormat(babyInfo.value.birthDate, 'DD MMMM YYYY HH:mm', { locales: navigator.language })
 			.value;
 	});
+	const getProfilePic = computed(() => {
+		return (
+			`https://firebasestorage.googleapis.com/v0/b/${pathReference.bucket}/o/` +
+			encodeURIComponent(pathReference.fullPath) +
+			'?alt=media'
+		);
+	});
 	return {
 		babyInfo,
 		setBabyInfo,
 		getBabyInfo,
+		getProfilePic,
 		getFormattedBODate,
 	};
 });

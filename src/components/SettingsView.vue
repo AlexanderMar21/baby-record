@@ -23,12 +23,13 @@
 		</form>
 		<hr class="my-3" />
 		<form @submit.prevent class="w-full h-full">
+			<h3 class="text-xl mb-2">Baby's information</h3>
 			<div class="flex gap-4 justify-start flex-wrap items-center">
 				<div class="flex gap-4 justify-start items-center">
 					<div class="form-group">
-						<label for="baby-name">Baby's mame:</label>
+						<label for="baby-name">Name:</label>
 						<input
-							v-model="babyInfo.name"
+							v-model="babyInfoTemp.name"
 							minlength="3"
 							class="form-control"
 							id="baby-name"
@@ -37,9 +38,9 @@
 						/>
 					</div>
 					<div class="form-group">
-						<label for="surname">Baby's surname:</label>
+						<label for="surname">Surname:</label>
 						<input
-							v-model="babyInfo.surname"
+							v-model="babyInfoTemp.surname"
 							minlength="3"
 							class="form-control"
 							id="surname"
@@ -50,10 +51,9 @@
 				</div>
 
 				<div class="form-group">
-					<label for="bod">Baby's birthday:</label>
+					<label for="bod">Birthday:</label>
 					<input
-						v-model="babyInfo.birthDate"
-						minlength="3"
+						v-model="babyInfoTemp.birthDate"
 						class="form-control"
 						id="bod"
 						type="datetime-local"
@@ -61,10 +61,10 @@
 					/>
 				</div>
 				<div class="form-group">
-					<label for="profile">Baby's profile:</label>
-					<input minlength="3" class="form-control" id="profile" type="file" placeholder="Surname" />
+					<label for="profile">Profile picture:</label>
+					<input class="form-control" id="profile" type="file" @change="onFileChange" />
 				</div>
-				<button class="btn btn--outlined flex-1 inline-block" type="button" @click="saveAndSync">
+				<button class="btn btn--outlined flex-1 inline-block" type="button" @click="cancelBabyUpdate">
 					❌ &nbsp Cancel
 				</button>
 				<button class="btn btn--primary flex-1 inline-block" type="button" @click="saveBabyInfo">
@@ -78,18 +78,32 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useFireStore } from '../store/firestore';
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { useMilkStore } from '../store/milk';
 import { useBabyInfo } from '../store/baby';
+import Compressor from 'compressorjs';
+import { uploadBytes } from 'firebase/storage';
+import { storage } from '../services/firebase';
+import { ref as REF } from 'firebase/storage';
+
+const fireStore = useFireStore();
+const milkStore = useMilkStore();
+const { collectionName, getCollectionName } = storeToRefs(fireStore);
+
+const storageRef = REF(storage, getCollectionName.value + '_info/babyInfo.jpg');
 
 const babyInfoStore = useBabyInfo();
 
 const { babyInfo } = storeToRefs(babyInfoStore);
 
-const fireStore = useFireStore();
-const milkStore = useMilkStore();
-const { collectionName } = storeToRefs(fireStore);
 const collName = ref(collectionName.value);
+const fileRef = ref<File | Blob>();
+
+const babyInfoTemp = reactive({
+	name: babyInfo.value.name,
+	surname: babyInfo.value.surname,
+	birthDate: babyInfo.value.birthDate,
+});
 
 const setName = () => {
 	fireStore.setCollectionName(collName.value);
@@ -97,12 +111,33 @@ const setName = () => {
 const saveName = () => {
 	setName();
 };
+const onFileChange = (e: Event) => {
+	if (!e.target.files[0]) return;
+
+	new Compressor(e.target.files[0], {
+		quality: 0.9,
+		maxWidth: 400,
+		success(result) {
+			fileRef.value = result;
+		},
+	});
+};
 const saveAndSync = async () => {
 	setName();
 	await milkStore.syncRecords();
 };
+const cancelBabyUpdate = () => {
+	babyInfoTemp.name = babyInfo.value.name;
+	babyInfoTemp.surname = babyInfo.value.surname;
+	babyInfoTemp.birthDate = babyInfo.value.birthDate;
+};
 const saveBabyInfo = async () => {
-	await babyInfoStore.setBabyInfo({ ...babyInfo.value });
+	await babyInfoStore.setBabyInfo({ ...babyInfoTemp });
+	if (fileRef.value) {
+		uploadBytes(storageRef, fileRef.value).then((_) => {
+			console.log('uploaded');
+		});
+	}
 };
 </script>
 

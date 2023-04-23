@@ -9,7 +9,7 @@ import { storeToRefs } from 'pinia';
 
 const babyInfoStore = useBabyInfo();
 
-const { babyInfo, getFormattedBODate } = storeToRefs(babyInfoStore);
+const { babyInfo, getFormattedBODate, getProfilePic } = storeToRefs(babyInfoStore);
 
 const comp = ref('milk');
 const renderOptions = {
@@ -31,7 +31,7 @@ onMounted(async () => {
 	<header
 		class="sticky left-0 right-0 py-3 minn-h-80x px-4 bottom-0 border-b border-gray-300 flex justify-center items-center bg-white z-2 shadow-md mb-3"
 	>
-		<ProfileAvatar class="absolute top-50% left-3" />
+		<ProfileAvatar class="absolute top-50% left-3" :icon="getProfilePic" />
 		<div class="flex-1">
 			<h1 class="text-center w-full text-xl font-medium">
 				{{ babyInfo.name }}
