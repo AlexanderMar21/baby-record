@@ -1,5 +1,5 @@
 <template>
-	<div class="w-14 h-14 bg-gray-100 rounded-full overflow-hidden">
+	<div class="w-15 h-15 bg-gray-100 rounded-full overflow-hidden">
 		<img class="w-full h-full object-cover" :src="icon" alt="Profile" />
 	</div>
 </template>
