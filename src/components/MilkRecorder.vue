@@ -1,10 +1,5 @@
 <template>
 	<div class="flex justify-center flex-col items-center max-h-full">
-		<h1 class="text-2xl mb-3 text-center px-4 leading-10">
-			Feeding tracker <br />
-			<span>👶👶🏿👶🏼</span>
-		</h1>
-
 		<form @submit.prevent="addMilk" class="w-full h-full">
 			<div class="flex gap-4 justify-start">
 				<div class="form-group">
