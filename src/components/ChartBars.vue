@@ -1,9 +1,9 @@
 <template>
-	<div class="max-h-400px">
+	<div class="max-h-360px">
 		<Bar :data="milkData" :options="options" />
 	</div>
 	<br />
-	<div class="max-h-400px">
+	<div class="max-h-360px">
 		<Line :data="weightData" :options="options" />
 	</div>
 </template>
