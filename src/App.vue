@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import MilkRecorder from './components/MilkRecorder.vue';
 import SettingsView from './components/SettingsView.vue';
 import WeightTracker from './components/WeightTracker.vue';
+import ChartBars from './components/ChartBars.vue';
 import ProfileAvatar from './components/ProfileAvatar.vue';
 import { useBabyInfo } from './store/baby';
 import { storeToRefs } from 'pinia';
@@ -18,6 +19,7 @@ const renderOptions = {
 	milk: MilkRecorder,
 	settings: SettingsView,
 	weight: WeightTracker,
+	charts: ChartBars,
 };
 
 const render = (com: string) => {
@@ -51,6 +53,7 @@ onMounted(async () => {
 			<div class="max-w-440px mx-auto flex w-full justify-evenly">
 				<button class="block text-2xl" type="button" @click="render('milk')">🍼</button>
 				<button class="block text-2xl" type="button" @click="render('weight')">⚖️</button>
+				<button class="block text-2xl" type="button" @click="render('charts')">📈</button>
 				<button class="block text-2xl" type="button" @click="render('settings')">⚙️</button>
 			</div>
 		</nav>
