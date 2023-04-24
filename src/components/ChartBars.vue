@@ -73,7 +73,7 @@ const weightData = {
 	labels: Object.keys(weightsByDate),
 	datasets: [
 		{
-			label: 'Weight/Day (grams)',
+			label: 'Weight (grams)',
 			backgroundColor: '#37479',
 			data: Object.values(weightsByDate),
 		},
