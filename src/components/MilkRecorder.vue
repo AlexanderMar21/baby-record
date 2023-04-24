@@ -2,19 +2,16 @@
 	<div class="flex justify-center flex-col items-center max-h-full">
 		<form @submit.prevent="addMilk" class="w-full h-full">
 			<div class="flex gap-4 justify-start">
-				<div class="form-group">
-					<label for="date">Date:</label>
+				<FormGroup label="Date:" for="date">
 					<input class="form-control" id="date" type="date" v-model="date" />
-				</div>
-				<div class="form-group">
-					<label class="form" for="time">Time:</label>
+				</FormGroup>
+				<FormGroup label="Time:" for="time">
 					<input class="form-control" id="time" type="time" v-model="time" />
-				</div>
+				</FormGroup>
 			</div>
 			<hr />
 			<div class="flex items-center justify-between gap-4">
-				<div class="form-group flex-1">
-					<label for="amount">Amount:</label>
+				<FormGroup class="flex-1" for="amount" label="Amount:">
 					<select class="form-control" id="amount" v-model="amount">
 						<option value="10">10 ml</option>
 						<option value="20">20 ml</option>
@@ -36,9 +33,15 @@
 						<option value="180">180 ml</option>
 						<option value="190">190 ml</option>
 					</select>
-				</div>
+				</FormGroup>
 				<button class="btn btn--outlined inline-block mt-3" @click.stop="setNow" type="button">Now</button>
-				<button class="btn btn--primary flex-1 inline-block mt-3" type="submit">💾 &nbsp Save</button>
+				<button
+					:disabled="!amount || !date || !time"
+					class="btn btn--primary flex-1 inline-block mt-3"
+					type="submit"
+				>
+					💾 &nbsp Save
+				</button>
 			</div>
 		</form>
 		<hr class="w-full my-2" />
@@ -47,17 +50,14 @@
 			<small class="text-teal-900 mb-1 inline-block">
 				{{ timeAgo ? `Last feeding: ${timeAgo} ⏱️` : '' }}
 			</small>
-			<ol
-				class="block bg-white shadow-md rounded-2xl border max-h100 overflow-y-auto border-gray-300 max-h-340px"
-			>
-				<ListItem v-for="record in sorted" :key="record.id">
+			<ListWrapper>
+				<ListItem v-for="record in sorted" :key="record.id" @delete="removeMilk(record)" :with-delete="true">
 					<span>📆 {{ useDateFormat(record.date, 'DD MMM, YYYY', { locales: locale }).value }} </span>
 					<span>🕐 {{ useDateFormat(record.time, 'HH:mm', { locales: locale }).value }} </span>
 					<span class="min-w-71px text-right">💧 {{ record.amount }} ml </span>
-					<button class="" @click="removeMilk(record)">🗑️</button>
 				</ListItem>
 				<p v-if="sorted.length === 0" class="text-center my-2">No records</p>
-			</ol>
+			</ListWrapper>
 		</section>
 	</div>
 </template>
@@ -71,7 +71,9 @@ import { create_UUID } from '../utils/uuid';
 
 import { useTimeAgo } from '@vueuse/core';
 import ListItem from './ListItem.vue';
+import ListWrapper from './ListWrapper.vue';
 import { MilkRecord } from '../types/Milk';
+import FormGroup from './FormGroup.vue';
 
 const formattedNowDate = useDateFormat(useNow(), 'YYYY-MM-DD');
 const formattedNowTime = useDateFormat(useNow(), 'HH:mm');

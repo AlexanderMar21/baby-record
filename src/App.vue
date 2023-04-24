@@ -6,8 +6,10 @@ import WeightTracker from './components/WeightTracker.vue';
 import ProfileAvatar from './components/ProfileAvatar.vue';
 import { useBabyInfo } from './store/baby';
 import { storeToRefs } from 'pinia';
+import { useWeight } from './store/weight';
 
 const babyInfoStore = useBabyInfo();
+const weightStore = useWeight();
 
 const { babyInfo, getFormattedBODate, getProfilePic } = storeToRefs(babyInfoStore);
 
@@ -24,6 +26,7 @@ const render = (com: string) => {
 
 onMounted(async () => {
 	await babyInfoStore.getBabyInfo();
+	await weightStore.fetchWeightRecords();
 });
 </script>
 

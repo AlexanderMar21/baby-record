@@ -16,6 +16,7 @@
 		"@vueuse/core": "^10.0.2",
 		"compressorjs": "^1.2.1",
 		"firebase": "^9.20.0",
+		"maska": "^2.1.8",
 		"pinia": "^2.0.35",
 		"typescript": "^5.0.2",
 		"vite": "^4.3.0",
