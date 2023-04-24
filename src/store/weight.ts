@@ -3,7 +3,7 @@
 // Compare this snippet from src/store/baby.ts:
 import { defineStore, storeToRefs } from 'pinia';
 import { useDateFormat, useLocalStorage } from '@vueuse/core';
-import { doc, setDoc, getDocs, collection } from 'firebase/firestore';
+import { doc, setDoc, getDocs, collection, deleteDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { useFireStore } from './firestore';
 import { WeightRecord } from '../types/Weight';
@@ -44,7 +44,7 @@ export const useWeight = defineStore('weight', () => {
 	const deleteWeightRecord = async (id: string) => {
 		weightRecords.value = weightRecords.value.filter((record) => record.id !== id);
 		if (hasFireStore.value) {
-			await setDoc(doc(db, getCollectionName.value + '_weight', id), weightRecords.value);
+			await deleteDoc(doc(db, getCollectionName.value + '_weight', id));
 		}
 	};
 
