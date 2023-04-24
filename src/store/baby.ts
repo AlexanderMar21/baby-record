@@ -10,7 +10,7 @@ export const useBabyInfo = defineStore('babyInfo', () => {
 	const babyInfo = useLocalStorage<BabyInfo>('babyInfo', {
 		name: 'Name',
 		surname: 'Surname',
-		birthDate: '023-04-07T18:30',
+		birthDate: '2023-04-07T18:30',
 	});
 	const fireStore = useFireStore();
 	const { getCollectionName, hasFireStore } = storeToRefs(fireStore);
