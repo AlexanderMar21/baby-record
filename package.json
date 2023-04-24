@@ -12,6 +12,7 @@
 		"vue": "^3.2.47"
 	},
 	"devDependencies": {
+		"@formkit/auto-animate": "^1.0.0-beta.6",
 		"@vitejs/plugin-vue": "^4.1.0",
 		"@vueuse/core": "^10.0.2",
 		"chart.js": "^4.2.1",
